@@ -74,7 +74,7 @@ procedure InicializaTabuleiro();
 			begin
 			 	if(  ((l2 = (l1 +1)) and (c2 = c1)) or (( l2 = (l1 +1) ) and ((c2 = (c1 +1)) or (c2 = (c1 - 1) )) and (Tabuleiro[l2,c2] <> '*') ) )then
 					begin //falta inserir a parte de verificar se tem uma peca do proprio jogador na frente da torre
-					if()
+					
 					Tabuleiro[l2,c2] := Tabuleiro[l1,c1];
 					Tabuleiro[l1,c1] := '**';
 					end
