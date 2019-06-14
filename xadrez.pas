@@ -62,26 +62,9 @@ procedure InicializaTabuleiro();
 	        	writeln(' ');
 	    	end;
 	end;
-	// procedure verificarPecaj1(var l1,c1, l2,c2: integer);
-	// begin
-	// 	if(Tabuleiro[l1,c1] == 'p' )
-	// end;
+	
 	 procedure moverPeca(var l1,c1, l2, c2 : integer);
-	// var Pjogador1 : array 1..6 : char;
-	// var Pjogador2 : array 1..6 : char;
-	// Pjogador1[1] = 'P1';
-	// Pjogador1[2] = 'T1';
-	// Pjogador1[1] = 'C1';
-	// Pjogador1[2] = 'B1';
- //    Pjogador1[1] = 'D1';
-	// Pjogador1[2] = 'R1';
-
-	// Pjogador2[1] = 'P2';
-	// Pjogador2[2] = 'T2';
-	// Pjogador2[1] = 'C2';
-	// Pjogador2[2] = 'B2';
- //    Pjogador2[1] = 'D2';
-	// Pjogador2[2] = 'R2';
+	
 
 	begin
 		if(Tabuleiro[l1,c1] <> '**')  then
