@@ -88,55 +88,13 @@ function moverTorre(var l1, c1, l2 , c2 : integer): boolean;
 begin
 	moverTorre := true;
 	//mover na coluna pra frente
-	if ((l1 = l2) and (c2 > c1)) then
-	begin
-		i := l1;
-		j := c1 + 1;
-		while(j <= c2)do
-		begin
-			if (((i < 1) or (i > 8)) or ((j < 1) or (j > 9))) then
-			 	begin
-			 		moverTorre := false;
-			    break;
-			  end;
-			if(Tabuleiro[i,j] <> '**')then
-			begin
-				moverTorre := false;
-				break;
-			end;
-			j := j + 1;
-		end;
-	end;
-	
-	//mover na coluna pra trás
-	if ((l1 = l2) and (c1 > c2)) then
-	begin
-		i := l1;
-		j := c1 - 1;
-		while(j >= 1)do
-		begin
-			if (((i < 1) or (i > 8)) or ((j < 1) or (j > 8))) then
-			 	begin
-			 		moverTorre := false;
-			    break;
-			  end;
-			if(Tabuleiro[i,j] <> '**')then
-			begin
-				moverTorre := false;
-				break;
-			end;
-			j := j - 1;
-		end;
-	end;
-	
-	//mover na linha para frente
 	if ((l1 < l2) and (c2 = c1)) then
 	begin
 		i := l1 + 1;
 		j := c1;
 		while(i <= l2)do
 		begin
-			if (((i < 1) or (i > 8)) or ((j < 1) or (j > 8))) then
+			if (((i < 1) or (i > 8)) or ((j < 1) or (j > 9))) then
 			 	begin
 			 		moverTorre := false;
 			    break;
@@ -150,12 +108,12 @@ begin
 		end;
 	end;
 	
-	//mover na linha para trás
-	if ((l1 > l2) and (c2 = c1)) then
+	//mover na coluna pra trás
+	if ((l1 > l2) and (c1 = c2)) then
 	begin
 		i := l1 - 1;
 		j := c1;
-		while(i > 0)do
+		while(i >= l2)do
 		begin
 			if (((i < 1) or (i > 8)) or ((j < 1) or (j > 8))) then
 			 	begin
@@ -171,15 +129,61 @@ begin
 		end;
 	end;
 	
-end;
+	//mover na linha para frente
+	if ((l1 = l2) and (c2 > c1)) then
+	begin
+		i := l1;
+		j := c1 + 1;
+		while(j <= c2)do
+		begin
+			if (((i < 1) or (i > 8)) or ((j < 1) or (j > 8))) then
+			 	begin
+			 		moverTorre := false;
+			    break;
+			  end;
+			if(Tabuleiro[i,j] <> '**')then
+			begin
+				moverTorre := false;
+				break;
+			end;
+			j := j + 2;
+		end;
+	end;
+	
+	//mover na linha para trás
+	if ((l1 = l2) and (c2 < c1)) then
+	begin
+		i := l1;
+		j := c1 - 1;
+		while(j >= c2)do
+		begin
+			if (((i < 1) or (i > 8)) or ((j < 1) or (j > 8))) then
+			 	begin
+			 		moverTorre := false;
+			    break;
+			  end;
+			if(Tabuleiro[i,j] <> '**')then
+			begin
+				moverTorre := false;
+				break;
+			end;
+			j := j - 1;
+		end;
+	end;
+	
+end; 
+
+
+
 //logica para mover o bispo
 function moverBispo(var l1,c1, l2, c2 : integer; cor : string): boolean;
 begin
-	moverBispo := true;
+	moverBispo := false;
 	
 	//bispo na cor branca
-	if (cor = 'B') then
+	if ((cor = 'B') and ((l2 + c2)mod 2 = 0)) then
 	begin
+	  moverBispo := true;
 	  //se o bispo da casa B for para frente e direita
 		if ((l2 > l1) and (c2 < c1)) then
 		begin
@@ -231,7 +235,7 @@ begin
 		begin
 		 	i := l1 - 1;
 		 	j := c1 - 1;
-			while ((i >= 1) and (j >= 1)) do
+			while ((i >= l2) and (j >= c2)) do
 			begin
 			 	if (((i < 1) or (i > 8)) or ((j < 1) or (j > 8))) then
 			 	begin
@@ -255,7 +259,7 @@ begin
 		begin
 		 	i := l1 - 1;
 		 	j := c1 + 1;
-			while ((i >= 1) and (j <= 12)) do
+			while ((i >= l2) and (j <= c2)) do
 			begin
 			 	if (((i < 1) or (i > 8)) or ((j < 1) or (j > 8))) then
 			 	begin
@@ -274,17 +278,22 @@ begin
 		end;
 		
 		
+	end
+	else
+	begin
+		moverBispo := false;
 	end;
 	
 	//bispo na cor preta
-	if (cor = 'P') then
+	if ((cor = 'P') and ((l2 + c2) mod 2 = 1)) then
 	begin
+	  moverBispo := true;
 		//se o bispo da casa P for para frente e direita
 		if ((l2 > l1) and (c2 < c1)) then
 		begin
 		 	i := l1 + 1;
 		 	j := c1 - 1;
-			while ((i <= l2) and (j >= 1)) do
+			while ((i <= l2) and (j >= c2)) do
 			begin
 				if (((i < 1) or (i > 8)) or ((j < 1) or (j > 8))) then
 			 	begin
@@ -329,7 +338,7 @@ begin
 		begin
 	 		i := l1 - 1;
 	 		j := c1 + 1;
-			while ((i >= 1) and (j <= c2)) do
+			while ((i >= l2) and (j <= c2)) do
 			begin
 				if (((i < 1) or (i > 8)) or ((j < 1) or (j > 8))) then
 			 	begin
@@ -353,7 +362,7 @@ begin
 		begin
 		 	i := l1 - 1;
 		 	j := c1 - 1;
-			while ((i >= 1) and (j >= 1)) do
+			while ((i >= l2) and (j >= c2)) do
 			begin
 				if (((i < 1) or (i > 8)) or ((j < 1) or (j > 8))) then
 			 	begin
@@ -383,7 +392,7 @@ end;
 //mover as peças	
 procedure moverPeca(var l1,c1, l2, c2 : integer);
 	begin
-		if((Tabuleiro[l1,c1] <> '**') and (l1 >= 1) and (l1 <= 8) and (c1 >= 1) and (c1 <= 8))  then
+		if((l1 >= 1) and (l1 <= 8) and (c1 >= 1) and (c1 <= 8) and (Tabuleiro[l1,c1] <> '**'))  then
 		begin
 		
 		 	//logica peão
