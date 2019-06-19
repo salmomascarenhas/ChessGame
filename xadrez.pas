@@ -1,7 +1,9 @@
 program xadrez;
 var
  Tabuleiro: array[1..8, 1..8] of string;
+ TabuleiroCores: array[1..8, 1..8] of string;
  i, j, l1,c1,l2,c2,loop : integer;
+ cor : string; 
 
 procedure InicializaTabuleiro();
 	begin
@@ -9,7 +11,16 @@ procedure InicializaTabuleiro();
 	for i := 1 to 8 do
 		for j:= 1 to 8 do
 			Tabuleiro[i,j] := '**';
-	
+	for i := 1 to 8 do
+		for j:= 1 to 8 do
+			if((i+j) mod 2 = 0) then
+			begin
+				TabuleiroCores[i,j] := 'B';
+	    end
+	    else
+	    begin
+	    	TabuleiroCores[i,j] := 'P';
+	    end;
 	Tabuleiro[1,1] := 'T1';
 	Tabuleiro[1,2] := 'C1';
 	Tabuleiro[1,3] := 'B1';
@@ -48,7 +59,7 @@ procedure InicializaTabuleiro();
 	
 	end;	
 
-	procedure showTabuleiro();
+procedure showTabuleiro();
 	begin
 		
 		writeln('==========================================');
@@ -58,29 +69,346 @@ procedure InicializaTabuleiro();
 	  	for i:= 1 to 8 do
 	  		begin
 	       		for j:= 1 to 8 do
+	          		write('   ',TabuleiroCores[i,j]);
+	        	writeln(' ');
+	    	end;
+			
+			for i:= 1 to 8 do
+	  		begin
+	       		for j:= 1 to 8 do
 	          		write('   ',Tabuleiro[i,j]);
 	        	writeln(' ');
 	    	end;
 	end;
-	
-	 procedure moverPeca(var l1,c1, l2, c2 : integer);
-	
 
+
+
+//logica para mover torre
+function moverTorre(var l1, c1, l2 , c2 : integer): boolean;
+begin
+	moverTorre := true;
+	//mover na coluna pra frente
+	if ((l1 = l2) and (c2 > c1)) then
 	begin
-		if(Tabuleiro[l1,c1] <> '**')  then
+		i := l1;
+		j := c1 + 1;
+		while(j <= c2)do
 		begin
-			if((Tabuleiro[l1,c1] = 'P1') or (Tabuleiro[l1,c1] = 'P2')) then
-
+			if (((i < 1) or (i > 8)) or ((j < 1) or (j > 9))) then
+			 	begin
+			 		moverTorre := false;
+			    break;
+			  end;
+			if(Tabuleiro[i,j] <> '**')then
 			begin
-			 	if(  ((l2 = (l1 +1)) and (c2 = c1)) or (( l2 = (l1 +1) ) and ((c2 = (c1 +1)) or (c2 = (c1 - 1) )) and (Tabuleiro[l2,c2] <> '*') ) )then
-					begin //falta inserir a parte de verificar se tem uma peca do proprio jogador na frente da torre
-					
-					Tabuleiro[l2,c2] := Tabuleiro[l1,c1];
-					Tabuleiro[l1,c1] := '**';
+				moverTorre := false;
+				break;
+			end;
+			j := j + 1;
+		end;
+	end;
+	
+	//mover na coluna pra trás
+	if ((l1 = l2) and (c1 > c2)) then
+	begin
+		i := l1;
+		j := c1 - 1;
+		while(j >= 1)do
+		begin
+			if (((i < 1) or (i > 8)) or ((j < 1) or (j > 8))) then
+			 	begin
+			 		moverTorre := false;
+			    break;
+			  end;
+			if(Tabuleiro[i,j] <> '**')then
+			begin
+				moverTorre := false;
+				break;
+			end;
+			j := j - 1;
+		end;
+	end;
+	
+	//mover na linha para frente
+	if ((l1 < l2) and (c2 = c1)) then
+	begin
+		i := l1 + 1;
+		j := c1;
+		while(i <= l2)do
+		begin
+			if (((i < 1) or (i > 8)) or ((j < 1) or (j > 8))) then
+			 	begin
+			 		moverTorre := false;
+			    break;
+			  end;
+			if(Tabuleiro[i,j] <> '**')then
+			begin
+				moverTorre := false;
+				break;
+			end;
+			i := i + 1;
+		end;
+	end;
+	
+	//mover na linha para trás
+	if ((l1 > l2) and (c2 = c1)) then
+	begin
+		i := l1 - 1;
+		j := c1;
+		while(i > 0)do
+		begin
+			if (((i < 1) or (i > 8)) or ((j < 1) or (j > 8))) then
+			 	begin
+			 		moverTorre := false;
+			    break;
+			  end;
+			if(Tabuleiro[i,j] <> '**')then
+			begin
+				moverTorre := false;
+				break;
+			end;
+			i := i - 1;
+		end;
+	end;
+	
+end;
+//logica para mover o bispo
+function moverBispo(var l1,c1, l2, c2 : integer; cor : string): boolean;
+begin
+	moverBispo := true;
+	
+	//bispo na cor branca
+	if (cor = 'B') then
+	begin
+	  //se o bispo da casa B for para frente e direita
+		if ((l2 > l1) and (c2 < c1)) then
+		begin
+		 	i := l1 + 1;
+		 	j := c1 - 1;
+			while ((i <= l2) and (j >= 1)) do
+			begin
+			  if (((i < 1) or (i > 8)) or ((j < 1) or (j > 8))) then
+			 	begin
+			 		moverBispo := false;
+			    break;
+			  end;
+			  
+				if(((i + j) mod 2 = 0) and (Tabuleiro[i,j] <> '**'))then
+				begin
+					moverBispo := false;
+					break;
+				end;
+				i := i + 1;
+				j := j - 1;
+			end;
+		end;
+		
+		//se o bispo da casa B for para frente e esquerda
+		if ((l2 > l1) and (c2 > c1)) then
+		begin
+		 	i := l1 + 1;
+		 	j := c1 + 1;
+			while ((i <= l2) and (j >= 1)) do
+			begin
+			  if (((i < 1) or (i > 8)) or ((j < 1) or (j > 8))) then
+			 	begin
+			 		moverBispo := false;
+			    break;
+			  end;
+				
+				if(((i + j) mod 2 = 0) and (Tabuleiro[i,j] <> '**'))then
+				begin
+					moverBispo := false;
+					break;
+				end;
+				i := i + 1;
+				j := j + 1;
+			end;
+		end;
+		
+		//se o bispo da casa B for para trás e direita
+		if ((l2 < l1) and (c2 < c1)) then
+		begin
+		 	i := l1 - 1;
+		 	j := c1 - 1;
+			while ((i >= 1) and (j >= 1)) do
+			begin
+			 	if (((i < 1) or (i > 8)) or ((j < 1) or (j > 8))) then
+			 	begin
+			 		moverBispo := false;
+			    break;
+			  end;
+			     
+				if(((i + j) mod 2 = 0) and (Tabuleiro[i,j] <> '**'))then
+				begin
+					moverBispo := false;
+					break;
+				end;
+				i := i - 1;
+				j := j - 1;
+			end;
+		end;
+		
+		
+		//se o bispo da casa B for para trás e esquerda
+		if ((l2 < l1) and (c2 > c1)) then
+		begin
+		 	i := l1 - 1;
+		 	j := c1 + 1;
+			while ((i >= 1) and (j <= 12)) do
+			begin
+			 	if (((i < 1) or (i > 8)) or ((j < 1) or (j > 8))) then
+			 	begin
+			 		moverBispo := false;
+			    break;
+			  end;
+			     
+				if(((i + j) mod 2 = 0) and (Tabuleiro[i,j] <> '**'))then
+				begin
+					moverBispo := false;
+					break;
+				end;
+				i := i - 1;
+				j := j + 1;
+			end;
+		end;
+		
+		
+	end;
+	
+	//bispo na cor preta
+	if (cor = 'P') then
+	begin
+		//se o bispo da casa P for para frente e direita
+		if ((l2 > l1) and (c2 < c1)) then
+		begin
+		 	i := l1 + 1;
+		 	j := c1 - 1;
+			while ((i <= l2) and (j >= 1)) do
+			begin
+				if (((i < 1) or (i > 8)) or ((j < 1) or (j > 8))) then
+			 	begin
+			 		moverBispo := false;
+			    break;
+			  end;
+			     
+				if(((i + j) mod 2 = 1) and (Tabuleiro[i,j] <> '**'))then
+				begin
+					moverBispo := false;
+					break;
+				end;
+				i := i + 1;
+				j := j - 1;
+			end;
+		end;	
+		//se o bispo da casa P for para frente e esquerda
+		if ((l2 > l1) and (c2 > c1)) then
+		begin
+		 	i := l1 + 1;
+		 	j := c1 + 1;
+			while ((i <= l2) and (j <= c2)) do
+			begin
+				if (((i < 1) or (i > 8)) or ((j < 1) or (j > 8))) then
+			 	begin
+			 		moverBispo := false;
+			    break;
+			  end;
+			     
+				if(((i + j) mod 2 = 1) and (Tabuleiro[i,j] <> '**'))then
+				begin
+					moverBispo := false;
+					break;
+				end;
+				i := i + 1;
+				j := j + 1;
+			end;
+		end;
+			
+		//se o bispo da casa P for para trás e esquerda
+		if ((l2 < l1) and (c2 > c1)) then
+		begin
+	 		i := l1 - 1;
+	 		j := c1 + 1;
+			while ((i >= 1) and (j <= c2)) do
+			begin
+				if (((i < 1) or (i > 8)) or ((j < 1) or (j > 8))) then
+			 	begin
+			 		moverBispo := false;
+			    break;
+			  end;
+			     
+				if(((i + j) mod 2 = 1) and (Tabuleiro[i,j] <> '**'))then
+				begin
+					moverBispo := false;
+					break;
+				end;
+					i := i - 1;
+					j := j + 1;
+			end;
+		end;
+				
+				
+		//se o bispo da casa P for para trás e direita
+		if ((l2 < l1) and (c2 < c1)) then
+		begin
+		 	i := l1 - 1;
+		 	j := c1 - 1;
+			while ((i >= 1) and (j >= 1)) do
+			begin
+				if (((i < 1) or (i > 8)) or ((j < 1) or (j > 8))) then
+			 	begin
+			 		moverBispo := false;
+			    break;
+			  end;
+				     
+				if(((i + j) mod 2 = 1) and (Tabuleiro[i,j] <> '**'))then
+				begin
+					moverBispo := false;
+					break;
+				end;
+				i := i - 1;
+				j := j - 1;
+			end;
+		end;	
+			
+	end;
+		
+			
+end;
+
+
+
+
+
+//mover as peças	
+procedure moverPeca(var l1,c1, l2, c2 : integer);
+	begin
+		if((Tabuleiro[l1,c1] <> '**') and (l1 >= 1) and (l1 <= 8) and (c1 >= 1) and (c1 <= 8))  then
+		begin
+		
+		 	//logica peão
+			if((Tabuleiro[l1,c1] = 'P1') or (Tabuleiro[l1,c1] = 'P2')) then
+			begin
+				
+				if ((l1 = 2) or (l1 = 7)) then
+					begin
+					 	if((l2 = (l1 + 2)) or (l2 = (l1 - 2)) and (c2 = c1)) then
+						 begin
+						 	Tabuleiro[l2,c2] := Tabuleiro[l1,c1];
+							Tabuleiro[l1,c1] := '**';
+						 end;  
+					end;
+			 	
+				 if(((l2 = (l1 + 1)) and (c2 = c1)) or (( l2 = (l1 +1) ) and (c2 = (c1 +1))) or ((c2 = (c1 - 1)) and (Tabuleiro[l2,c2] <> '**') ))then
+					begin
+						Tabuleiro[l2,c2] := Tabuleiro[l1,c1];
+						Tabuleiro[l1,c1] := '**';
 					end
 					else
 						writeln('erro vc nao pode jogar aqui com o peao');
 			end;
+			
+			//logica cavalo
 			if((Tabuleiro[l1,c1] = 'C1') or (Tabuleiro[l1,c1] = 'C2')) then
 			begin
 				if(((l2 = l1 + 2) and ((c2 = c1 + 1) or (c2 = c1 -1) )) or  ((l2 = l1 - 2) and ((c2 = c1 + 1) or (c2 = c1 -1) ))  ) then
@@ -91,16 +419,43 @@ procedure InicializaTabuleiro();
 				else
 					writeln('erro vc nao pode jogar aqui com o cavalo');
 			end;
+			
+			//logica torre
 			if((Tabuleiro[l1,c1] = 'T1') or (Tabuleiro[l1,c1] = 'T2')) then
-			begin//falta inserir a parte de verificar se tem uma peca do proprio jogador na frente da torre
-				if((l1 = l2)  or (c1 = c2)) then
+			begin
+				if(moverTorre(l1,c1,l2,c2)) then
 					begin
-					Tabuleiro[l2,c2] := Tabuleiro[l1,c1];
-					Tabuleiro[l1,c1] := '**';
+							Tabuleiro[l2,c2] := Tabuleiro[l1,c1];
+							Tabuleiro[l1,c1] := '**';
 					end
 					else
 						writeln('erro vc nao pode jogar aqui com a torre');
 			end;
+			
+		  //logica bispo
+			if((Tabuleiro[l1,c1] = 'B1') or (Tabuleiro[l1,c1] = 'B2')) then
+			begin
+				cor := TabuleiroCores[l1,c1];
+				if(moverBispo(l1,c1,l2,c2,cor)) then
+				begin
+					Tabuleiro[l2,c2] := Tabuleiro[l1,c1];
+					Tabuleiro[l1,c1] := '**';
+				end
+				else
+						writeln('erro vc nao pode jogar aqui com o bispo');
+			end;
+			
+			//logica Rainha
+			if((Tabuleiro[l1,c1] = 'D1') or (Tabuleiro[l1,c1] = 'D2')) then
+			begin
+				cor := TabuleiroCores[l1,c1];
+				if(true) then
+				begin
+					 Tabuleiro[l2,c2] := Tabuleiro[l1,c1];
+					 Tabuleiro[l1,c1] := '**';
+				end;
+			end;
+			
 			
 		end 
 		else 	
