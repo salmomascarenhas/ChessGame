@@ -2,7 +2,7 @@ program xadrez;
 var
  Tabuleiro: array[1..8, 1..8] of string;
  TabuleiroCores: array[1..8, 1..8] of string;
- i, j, l1,c1,l2,c2,loop : integer;
+ i, j, l1, c1, l2, c2, loop, cont : integer;
  cor : string; 
 
 procedure InicializaTabuleiro();
@@ -386,12 +386,23 @@ begin
 end;
 
 
-
+//alternar jogadores
+function jogar (var l1, c1, cont : integer): integer;
+begin
+	if ((cont mod 2 = 1) and (Tabuleiro[l1,c1] = 'P1') and (Tabuleiro[l1,c1] = 'T1') and (Tabuleiro[l1,c1] = 'C1') and (Tabuleiro[l1,c1] = 'R1') and (Tabuleiro[l1,c1] = 'D1') and (Tabuleiro[l1,c1] = 'B1') ) then
+	begin
+		jogar := 1;
+	end;
+	if ((cont mod 2 = 0) and (Tabuleiro[l1,c1] = 'P2') and (Tabuleiro[l1,c1] = 'T2') and (Tabuleiro[l1,c1] = 'C2') and (Tabuleiro[l1,c1] = 'R2') and (Tabuleiro[l1,c1] = 'D2') and (Tabuleiro[l1,c1] = 'B2') ) then
+	begin
+		jogar := 2;
+	end;
+end;
 
 
 //mover as pe�as	
 procedure moverPeca(var l1,c1, l2, c2 : integer);
-	begin
+begin
 		if((l1 >= 1) and (l1 <= 8) and (c1 >= 1) and (c1 <= 8) and (Tabuleiro[l1,c1] <> '**'))  then
 		begin
 		
@@ -472,23 +483,27 @@ procedure moverPeca(var l1,c1, l2, c2 : integer);
 			writeln('Erro - não tem nenhuma peca nessa posicao ');
 		end;				
 
-	end;
+end;
+
 begin
 	//Obs Falta tratar o caso em
 loop := 1;
+cont := 1;
 InicializaTabuleiro();
 showTabuleiro();
 while( loop = 1) do
 begin
-writeln('-----------------------------------------');
-writeln('Digite a origem da peca vc quer mover');
-readln(l1,c1);
-writeln('Digite o destino da peca vc quer mover');
-readln(l2,c2);
-moverPeca(l1,c1,l2,c2);
-	
-
-showTabuleiro();
+	writeln('-----------------------------------------');
+	writeln('Digite a origem da peca vc quer mover');
+	readln(l1,c1);
+	writeln('Digite o destino da peca vc quer mover');
+	readln(l2,c2);
+	if (jogar(l1,c1, cont)) then	
+	begin
+		moverPeca(l1,c1,l2,c2);
+	end;
+	showTabuleiro();
+	cont := cont + 1;
 end;
 							// Falta tratar
 // 1-Não permitir que o jogador jogue mais de uma vez de forma seguida (essencial)
