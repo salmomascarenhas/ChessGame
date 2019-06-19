@@ -387,15 +387,16 @@ end;
 
 
 //alternar jogadores
-function jogar (var l1, c1, cont : integer): integer;
+function jogar (var l1, c1, cont : integer): boolean;
 begin
-	if ((cont mod 2 = 1) and (Tabuleiro[l1,c1] = 'P1') and (Tabuleiro[l1,c1] = 'T1') and (Tabuleiro[l1,c1] = 'C1') and (Tabuleiro[l1,c1] = 'R1') and (Tabuleiro[l1,c1] = 'D1') and (Tabuleiro[l1,c1] = 'B1') ) then
+  jogar := false;
+	if ((cont mod 2 = 1) and ((Tabuleiro[l1,c1] = 'P1') or (Tabuleiro[l1,c1] = 'T1') or (Tabuleiro[l1,c1] = 'C1') or (Tabuleiro[l1,c1] = 'R1') or (Tabuleiro[l1,c1] = 'D1') or (Tabuleiro[l1,c1] = 'B1')) ) then
 	begin
-		jogar := 1;
+		jogar := true;
 	end;
-	if ((cont mod 2 = 0) and (Tabuleiro[l1,c1] = 'P2') and (Tabuleiro[l1,c1] = 'T2') and (Tabuleiro[l1,c1] = 'C2') and (Tabuleiro[l1,c1] = 'R2') and (Tabuleiro[l1,c1] = 'D2') and (Tabuleiro[l1,c1] = 'B2') ) then
+	if ((cont mod 2 = 0) and ((Tabuleiro[l1,c1] = 'P2') or (Tabuleiro[l1,c1] = 'T2') or (Tabuleiro[l1,c1] = 'C2') or (Tabuleiro[l1,c1] = 'R2') or (Tabuleiro[l1,c1] = 'D2') or (Tabuleiro[l1,c1] = 'B2')) ) then
 	begin
-		jogar := 2;
+		jogar := true;
 	end;
 end;
 
@@ -501,9 +502,9 @@ begin
 	if (jogar(l1,c1, cont)) then	
 	begin
 		moverPeca(l1,c1,l2,c2);
+		cont := cont + 1;
 	end;
 	showTabuleiro();
-	cont := cont + 1;
 end;
 							// Falta tratar
 // 1-Não permitir que o jogador jogue mais de uma vez de forma seguida (essencial)
