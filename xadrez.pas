@@ -62,9 +62,9 @@ end;
 procedure showTabuleiro();
 begin
   
-  writeln('==========================================');
-  writeln('       	  Tabuleiro          		   ');
-  writeln('==========================================');
+  writeln('=======================================================');
+  writeln('|                        Tabuleiro                    |');
+  writeln('=======================================================');
   
   for i:= 1 to 8 do
   begin
@@ -543,114 +543,113 @@ end;
 //mover as pe�as
 function moverPeca(var l1,c1, l2, c2 : integer): boolean;
 begin
-  if(Tabuleiro[l1,c1] <> '**')  then
-  begin
+  	if(Tabuleiro[l1,c1] <> '**')  then
+ 	begin
     
     //logica pe�o
-    if((Tabuleiro[l1,c1] = 'P1') or (Tabuleiro[l1,c1] = 'P2')) then
+	    if((Tabuleiro[l1,c1] = 'P1') or (Tabuleiro[l1,c1] = 'P2')) then
+	    begin
+	      if(moverPeao(l1, c1, l2, c2)) then
+	      begin
+	      	Tabuleiro[l2,c2] := Tabuleiro[l1,c1];
+	        Tabuleiro[l1,c1] := '**';
+	        moverPeca := true;
+	      end
+	      else
+	      begin
+	      	writeln('Erro vc nao pode jogar aqui com o peao');
+	      	moverPeca := false;
+	      end;
+	    end;
+	    
+	    //logica cavalo
+	    if((Tabuleiro[l1,c1] = 'C1') or (Tabuleiro[l1,c1] = 'C2')) then
+	    begin
+	      if(moverCavalo(l1, c1, l2, c2)) then
+	      begin
+	        Tabuleiro[l2,c2] := Tabuleiro[l1,c1];
+	        Tabuleiro[l1,c1] := '**';
+	        moverPeca := true;
+	      end
+	      else
+	      begin
+	     	 writeln('Erro vc nao pode jogar aqui com o cavalo');
+	     	 moverPeca := false;
+	     	end;
+	    end;
+	    
+	    //logica torre
+	    if((Tabuleiro[l1,c1] = 'T1') or (Tabuleiro[l1,c1] = 'T2')) then
+	    begin
+	      if(moverTorre(l1,c1,l2,c2)) then
+	      begin
+	        Tabuleiro[l2,c2] := Tabuleiro[l1,c1];
+	        Tabuleiro[l1,c1] := '**';
+	        moverPeca := true;
+	      end
+	      else
+	      begin
+	      	writeln('Erro vc nao pode jogar aqui com a torre');
+	      	moverPeca := false;
+	      end;
+	    end;
+	    
+	    //logica bispo
+	    if((Tabuleiro[l1,c1] = 'B1') or (Tabuleiro[l1,c1] = 'B2')) then
+	    begin
+	      cor := TabuleiroCores[l1,c1];
+	      if(moverBispo(l1,c1,l2,c2,cor)) then
+	      begin
+	        Tabuleiro[l2,c2] := Tabuleiro[l1,c1];
+	        Tabuleiro[l1,c1] := '**';
+	        moverPeca := true;
+	      end
+	      else
+	      begin
+	      	writeln('Erro vc nao pode jogar aqui com o bispo');
+	      	moverPeca := false;
+	      end;
+	    end;
+	    
+	    //logica rei
+	    if((Tabuleiro[l1,c1] = 'R1') or (Tabuleiro[l1,c1] = 'R2')) then
+	    begin
+	      if(moverRei(l1,c1,l2,c2)) then
+	      begin
+	        Tabuleiro[l2,c2] := Tabuleiro[l1,c1];
+	        Tabuleiro[l1,c1] := '**';
+	        moverPeca := true;
+	      end
+	      else
+	      begin
+	      	writeln('Erro vc nao pode jogar aqui com o Rei');
+	      	moverPeca := false;
+	      end;
+	    end;
+	    
+	    //logica Rainha
+	    if((Tabuleiro[l1,c1] = 'D1') or (Tabuleiro[l1,c1] = 'D2')) then
+	    begin
+	      cor := TabuleiroCores[l1,c1];
+	      if(moverRainha(l1, c1, l2, c2, cor)) then
+	      begin
+	        Tabuleiro[l2,c2] := Tabuleiro[l1,c1];
+	        Tabuleiro[l1,c1] := '**';
+	        moverPeca := true;
+	      end
+	      else
+	      begin
+	       writeln('Erro vc nao pode jogar aqui com a Rainha');
+	       moverPeca := false;
+	      end;
+	    end;
+  
+    end
+    else
     begin
-      if(moverPeao(l1, c1, l2, c2)) then
-      begin
-      	Tabuleiro[l2,c2] := Tabuleiro[l1,c1];
-        Tabuleiro[l1,c1] := '**';
-        moverPeca := true;
-      end
-      else
-      begin
-      	writeln('erro vc nao pode jogar aqui com o peao');
-      	moverPeca := false;
-      end;
-    end;
-    
-    //logica cavalo
-    if((Tabuleiro[l1,c1] = 'C1') or (Tabuleiro[l1,c1] = 'C2')) then
-    begin
-      if(moverCavalo(l1, c1, l2, c2)) then
-      begin
-        Tabuleiro[l2,c2] := Tabuleiro[l1,c1];
-        Tabuleiro[l1,c1] := '**';
-        moverPeca := true;
-      end
-      else
-      begin
-     	 writeln('erro vc nao pode jogar aqui com o cavalo');
-     	 moverPeca := false;
-     	end;
-    end;
-    
-    //logica torre
-    if((Tabuleiro[l1,c1] = 'T1') or (Tabuleiro[l1,c1] = 'T2')) then
-    begin
-      if(moverTorre(l1,c1,l2,c2)) then
-      begin
-        Tabuleiro[l2,c2] := Tabuleiro[l1,c1];
-        Tabuleiro[l1,c1] := '**';
-        moverPeca := true;
-      end
-      else
-      begin
-      	writeln('erro vc nao pode jogar aqui com a torre');
-      	moverPeca := false;
-      end;
-    end;
-    
-    //logica bispo
-    if((Tabuleiro[l1,c1] = 'B1') or (Tabuleiro[l1,c1] = 'B2')) then
-    begin
-      cor := TabuleiroCores[l1,c1];
-      if(moverBispo(l1,c1,l2,c2,cor)) then
-      begin
-        Tabuleiro[l2,c2] := Tabuleiro[l1,c1];
-        Tabuleiro[l1,c1] := '**';
-        moverPeca := true;
-      end
-      else
-      begin
-      	writeln('erro vc nao pode jogar aqui com o bispo');
-      	moverPeca := false;
-      end;
-    end;
-    
-    //logica rei
-    if((Tabuleiro[l1,c1] = 'R1') or (Tabuleiro[l1,c1] = 'R2')) then
-    begin
-      if(moverRei(l1,c1,l2,c2)) then
-      begin
-        Tabuleiro[l2,c2] := Tabuleiro[l1,c1];
-        Tabuleiro[l1,c1] := '**';
-        moverPeca := true;
-      end
-      else
-      begin
-      	writeln('erro vc nao pode jogar aqui com o Rei');
-      	moverPeca := false;
-      end;
-    end;
-    
-    //logica Rainha
-    if((Tabuleiro[l1,c1] = 'D1') or (Tabuleiro[l1,c1] = 'D2')) then
-    begin
-      cor := TabuleiroCores[l1,c1];
-      if(moverRainha(l1, c1, l2, c2, cor)) then
-      begin
-        Tabuleiro[l2,c2] := Tabuleiro[l1,c1];
-        Tabuleiro[l1,c1] := '**';
-        moverPeca := true;
-      end
-      else
-      begin
-       writeln('erro vc nao pode jogar aqui com a Rainha');
+       writeln('Erro - n�o tem nenhuma peca nessa posicao ');
        moverPeca := false;
-      end;
-    end;
-    
-    
-  end
-  else
-  begin
-    writeln('Erro - não tem nenhuma peca nessa posicao ');
-    moverPeca := false;
-  end;
+  	end;
   
 end;
 
@@ -659,39 +658,88 @@ end;
 function jogar (var l1, c1, cont : integer): boolean;
 begin
   jogar := false;
-  if ((cont mod 2 = 1) and ((Tabuleiro[l1,c1] = 'P1') or (Tabuleiro[l1,c1] = 'T1') or (Tabuleiro[l1,c1] = 'C1') or (Tabuleiro[l1,c1] = 'R1') or (Tabuleiro[l1,c1] = 'D1') or (Tabuleiro[l1,c1] = 'B1')) ) then
+  if (Tabuleiro[l1,c1] = '**') then
+  begin
+ 	jogar := false;
+ 	writeln('Nao existe peca nessa posicao');
+ end	
+ else if ((cont mod 2 = 1) and ((Tabuleiro[l1,c1] = 'P1') or (Tabuleiro[l1,c1] = 'T1') or (Tabuleiro[l1,c1] = 'C1') or (Tabuleiro[l1,c1] = 'R1') or (Tabuleiro[l1,c1] = 'D1') or (Tabuleiro[l1,c1] = 'B1')) ) then
   begin
     jogar := true;
-  end;
-  if ((cont mod 2 = 0) and ((Tabuleiro[l1,c1] = 'P2') or (Tabuleiro[l1,c1] = 'T2') or (Tabuleiro[l1,c1] = 'C2') or (Tabuleiro[l1,c1] = 'R2') or (Tabuleiro[l1,c1] = 'D2') or (Tabuleiro[l1,c1] = 'B2')) ) then
+    writeln('------------------------');
+    writeln('Vez do jogador 2 jogar ');
+    writeln('------------------------');
+  end
+  else if ((cont mod 2 = 0) and ((Tabuleiro[l1,c1] = 'P2') or (Tabuleiro[l1,c1] = 'T2') or (Tabuleiro[l1,c1] = 'C2') or (Tabuleiro[l1,c1] = 'R2') or (Tabuleiro[l1,c1] = 'D2') or (Tabuleiro[l1,c1] = 'B2')) ) then
   begin
     jogar := true;
+    writeln('------------------------');
+    writeln('Vez do jogador 1 jogar');
+  	writeln('------------------------');
+  end
+  else
+  begin 
+  writeln('Vez do outro jogador jogar !!');
+  jogar := false;
   end;
 end;
+
+function TelaInicial(): boolean;
+	var 
+	op :integer; 
+	begin 
+		writeln('=======================================================');
+		writeln('|                   Vamos jogar xadrez ?              |');
+		writeln('=======================================================');
+
+		writeln('1 - Comecar');
+		writeln('2 - Sair');
+		readln(op);
+
+		if(op = 1) then
+			TelaInicial := true; 
+		if(op = 2) then
+			TelaInicial := false;	
+	end;
+
 
 //****************************************************PRINCIPAL******************************************************
 begin
   loop := 1;
   cont := 1;
-  InicializaTabuleiro();
-  showTabuleiro();
-  while( loop = 1) do
-  begin
-    writeln('-----------------------------------------');
-    writeln('Digite a origem da peca vc quer mover');
-    readln(l1,c1);
-    writeln('Digite o destino da peca vc quer mover');
-    readln(l2,c2);
-    if ((l1 >= 1) and (l1 <= 8) and (c1 >= 1) and (c1 <= 8) and jogar(l1,c1, cont)) then
-    begin
-      if(moverPeca(l1,c1,l2,c2))then
-      	cont := cont + 1;
-    end;
-    showTabuleiro();
-  end;
+  
+
+	if(TelaInicial())then
+	 begin 
+	 	InicializaTabuleiro();
+  		showTabuleiro();	 	
+		while( loop = 1) do
+		begin
+		  writeln('-----------------------------------------');
+		  writeln('Digite a origem da peca vc quer mover');
+		  readln(l1,c1);
+		  writeln('Digite o destino da peca vc quer mover');
+		  readln(l2,c2);
+		  if ((l1 >= 1) and (l1 <= 8) and (c1 >= 1) and (c1 <= 8) and (l2 >= 1) and (l2 <= 8) and (c2 >=1) and (c2 <= 8)) then
+		  begin
+			  	if (jogar(l1,c1, cont)) then
+			  		 if(moverPeca(l1,c1,l2,c2))then
+				  		cont := cont + 1;
+				
+				
+		  end
+		  else
+		  begin 
+		   	writeln('Posicao invalida ');
+		  end;
+		  showTabuleiro();
+		end;
+	end;	
   // Falta tratar
   // 3-Tratar a questao de um jogador não conseguir comer a própria peca (melhor criar uma função ai a gente chama na lógica de cada peça) (essencial)
   // 5-A dama so precisa tratar a questão de ela não comer uma  peca do mesmo grupo dela que é  a questao 3
   // 6- Tratar a questao quando tiver em xeque (detalhes finais)
   // 7- Mostrar as posições onde o jogador pode jogar (detalhes finais)
+
+   
 End.
