@@ -3,6 +3,7 @@ var
 Tabuleiro: array[1..8, 1..8] of string;
 TabuleiroCores: array[1..8, 1..8] of string;
 i, j, l1, c1, l2, c2, loop, cont : integer;
+peca1, peca2 : string;
 cor : string;
 
 procedure InicializaTabuleiro();
@@ -81,6 +82,17 @@ begin
   end;
 end;
 
+//*********************************************VERIFICAR PECA INIMIGA******************************************
+function pecaInimiga (var l1, c1, l2, c2: integer): boolean;
+begin
+	peca1 := copy(Tabuleiro[l1,c1], 2, 1);
+	peca2 := copy(Tabuleiro[l2,c2], 2, 1);
+ 	if(((peca1 = '1') and (peca2 = '2')) or ((peca1 = '2') and (peca2 = '1')))then
+	begin
+		pecaInimiga := true;
+	end;
+end;
+
 // ****************************************************CAVALO***************************************************
 //logica para mover o cavalo
 function moverCavalo(l1, c1, l2, c2 : integer): boolean;
@@ -89,7 +101,7 @@ begin
 	//mover para frente e direita
 	if (((l1 + 2) = l2) and ((c1 - 1) = c2)) then
 	begin
-		if (Tabuleiro[l2,c2] = '**') then
+		if ((Tabuleiro[l2,c2] = '**') or pecaInimiga(l1,c1,l2,c2)) then
 		begin
 			moverCavalo := true;
 		end;
@@ -98,7 +110,7 @@ begin
 	//mover para frente e esquerda
 	if (((l1 + 2) = l2) and ((c1 + 1) = c2)) then
 	begin
-		if (Tabuleiro[l2,c2] = '**') then
+		if ((Tabuleiro[l2,c2] = '**') or pecaInimiga(l1,c1,l2,c2)) then
 		begin
 			moverCavalo := true;
 		end;
@@ -107,7 +119,7 @@ begin
 	//mover para trás e esquerda
 	if (((l1 - 2) = l2) and ((c1 + 1) = c2)) then
 	begin
-		if (Tabuleiro[l2,c2] = '**') then
+		if ((Tabuleiro[l2,c2] = '**') or pecaInimiga(l1,c1,l2,c2)) then
 		begin
 			moverCavalo := true;
 		end;
@@ -116,7 +128,7 @@ begin
 	//mover para trás e direita
 	if (((l1 - 2) = l2) and ((c1 - 1) = c2)) then
 	begin
-		if (Tabuleiro[l2,c2] = '**') then
+		if ((Tabuleiro[l2,c2] = '**') or pecaInimiga(l1,c1,l2,c2)) then
 		begin
 			moverCavalo := true;
 		end;
@@ -125,7 +137,7 @@ begin
 	//mover para lado direito e frente
 	if (((l1 + 1) = l2) and ((c1 - 2) = c2)) then
 	begin
-		if (Tabuleiro[l2,c2] = '**') then
+		if ((Tabuleiro[l2,c2] = '**') or pecaInimiga(l1,c1,l2,c2)) then
 		begin
 			moverCavalo := true;
 		end;
@@ -134,7 +146,7 @@ begin
 	//mover para lado direito e trás
 	if (((l1 - 1) = l2) and ((c1 - 2) = c2)) then
 	begin
-		if (Tabuleiro[l2,c2] = '**') then
+		if ((Tabuleiro[l2,c2] = '**') or pecaInimiga(l1,c1,l2,c2)) then
 		begin
 			moverCavalo := true;
 		end;
@@ -143,7 +155,7 @@ begin
 	//mover para lado esquerdo e trás
 	if (((l1 - 1) = l2) and ((c1 + 2) = c2)) then
 	begin
-		if (Tabuleiro[l2,c2] = '**') then
+		if ((Tabuleiro[l2,c2] = '**') or pecaInimiga(l1,c1,l2,c2)) then
 		begin
 			moverCavalo := true;
 		end;
@@ -152,7 +164,7 @@ begin
 	//mover para lado esquerdo e frente
 	if (((l1 + 1) = l2) and ((c1 + 2) = c2)) then
 	begin
-		if (Tabuleiro[l2,c2] = '**') then
+		if ((Tabuleiro[l2,c2] = '**') or pecaInimiga(l1,c1,l2,c2)) then
 		begin
 			moverCavalo := true;
 		end;
@@ -174,13 +186,35 @@ begin
 	begin
 		moverPeao := true;
 	end;
+	
 	//mover para frente
-	if ((l1 + 1 = l2) and (c1 = c2)) then
+	if ((Tabuleiro[l1,c1] = 'P1') and (l1 + 1 = l2) and (c1 = c2) and (Tabuleiro[l2,c2] = '**')) then
 	begin
 		moverPeao := true;
 	end;
 	//mover para tras
-	if ((l1 - 1 = l2) and (c1 = c2)) then
+	if ((Tabuleiro[l1,c1] = 'P2') and (l1 - 1 = l2) and (c1 = c2) and (Tabuleiro[l2,c2] = '**')) then
+	begin
+		moverPeao := true;
+	end;
+	
+	//mover para frente e direita capturar
+	if ((l1 + 1 = l2) and ((c1 - 1) = c2) and (Tabuleiro[l1,c1] = 'P1') and pecaInimiga(l1,c1,l2,c2)) then
+	begin
+		moverPeao := true;
+	end;
+	//mover para frente e esqerda capturar
+	if ((l1 + 1 = l2) and ((c1 + 1) = c2) and (Tabuleiro[l1,c1] = 'P1') and pecaInimiga(l1,c1,l2,c2)) then
+	begin
+		moverPeao := true;
+	end;
+	//mover para trás e direita capturar
+	if ((l1 - 1 = l2) and ((c1 - 1) = c2) and (Tabuleiro[l1,c1] = 'P2') and pecaInimiga(l1,c1,l2,c2)) then
+	begin
+		moverPeao := true;
+	end;
+	//mover para trás e esqerda capturar
+	if ((l1 - 1 = l2) and ((c1 + 1) = c2) and (Tabuleiro[l1,c1] = 'P2') and pecaInimiga(l1,c1,l2,c2)) then
 	begin
 		moverPeao := true;
 	end;
@@ -191,42 +225,42 @@ function moverRei(var l1, c1, l2, c2: integer): boolean;
 begin
 	moverRei := false;
 	//mover para frente
-	if(((l1 + 1) = l2) and (c1 = c2) and (Tabuleiro[l2,c2] = '**'))then
+	if(((l1 + 1) = l2) and (c1 = c2) and ((Tabuleiro[l2,c2] = '**') or pecaInimiga(l1,c1,l2,c2)))then
 	begin
 		moverRei := true;
 	end;
 	//mover para frente e direita
-	if(((l1 + 1) = l2) and ((c1 - 1) = c2) and (Tabuleiro[l2,c2] = '**'))then
+	if(((l1 + 1) = l2) and ((c1 - 1) = c2) and ((Tabuleiro[l2,c2] = '**') or pecaInimiga(l1,c1,l2,c2)))then
 	begin
 		moverRei := true;
 	end;
 	//mover para frente esquerda
-	if(((l1 + 1) = l2) and ((c1 + 1) = c2) and (Tabuleiro[l2,c2] = '**'))then
+	if(((l1 + 1) = l2) and ((c1 + 1) = c2) and ((Tabuleiro[l2,c2] = '**') or pecaInimiga(l1,c1,l2,c2)))then
 	begin
 		moverRei := true;
 	end;
 	//mover para trás
-	if(((l1 - 1) = l2) and (c1 = c2) and (Tabuleiro[l2,c2] = '**'))then
+	if(((l1 - 1) = l2) and (c1 = c2) and ((Tabuleiro[l2,c2] = '**') or pecaInimiga(l1,c1,l2,c2)))then
 	begin
 		moverRei := true;
 	end;
 	//mover para trás e direita
-	if(((l1 - 1) = l2) and ((c1 - 1) = c2) and (Tabuleiro[l2,c2] = '**'))then
+	if(((l1 - 1) = l2) and ((c1 - 1) = c2) and ((Tabuleiro[l2,c2] = '**') or pecaInimiga(l1,c1,l2,c2)))then
 	begin
 		moverRei := true;
 	end;
 	//mover para trás e esquerda
-	if(((l1 - 1) = l2) and ((c1 + 1) = c2) and (Tabuleiro[l2,c2] = '**'))then
+	if(((l1 - 1) = l2) and ((c1 + 1) = c2) and ((Tabuleiro[l2,c2] = '**') or pecaInimiga(l1,c1,l2,c2)))then
 	begin
 		moverRei := true;
 	end;
 	//mover para lado esquerdo
-	if((l1 = l2) and ((c1 + 1) = c2) and (Tabuleiro[l2,c2] = '**'))then
+	if((l1 = l2) and ((c1 + 1) = c2) and ((Tabuleiro[l2,c2] = '**') or pecaInimiga(l1,c1,l2,c2)))then
 	begin
 		moverRei := true;
 	end;
 	//mover para lado direito
-	if(((l1 = l2) and ((c1 - 1) = c2)) and (Tabuleiro[l2,c2] = '**'))then
+	if(((l1 = l2) and ((c1 - 1) = c2)) and ((Tabuleiro[l2,c2] = '**') or pecaInimiga(l1,c1,l2,c2)))then
 	begin
 		moverRei := true;
 	end;
@@ -257,6 +291,10 @@ begin
       end;
       i := i + 1;
     end;
+    if(pecaInimiga(l1,c1,l2,c2)) then
+    begin
+    	moverTorre := true;
+    end;
   end;
   
   //mover na coluna pra trás
@@ -277,6 +315,10 @@ begin
         break;
       end;
       i := i - 1;
+    end;
+    if(pecaInimiga(l1,c1,l2,c2)) then
+    begin
+    	moverTorre := true;
     end;
   end;
   
@@ -299,6 +341,10 @@ begin
       end;
       j := j + 1;
     end;
+    if(pecaInimiga(l1,c1,l2,c2)) then
+    begin
+    	moverTorre := true;
+    end;
   end;
   
   //mover na linha para trás
@@ -319,6 +365,10 @@ begin
         break;
       end;
       j := j - 1;
+    end;
+    if(pecaInimiga(l1,c1,l2,c2)) then
+    begin
+    	moverTorre := true;
     end;
   end;
   
@@ -355,7 +405,11 @@ begin
         i := i + 1;
         j := j - 1;
       end;
-    end;
+    	if(pecaInimiga(l1,c1,l2,c2)) then
+	    begin
+	    	moverBispo := true;
+	    end;
+		end;
     
     //se o bispo da casa B for para frente e esquerda
     if ((l2 > l1) and (c2 > c1)) then
@@ -378,6 +432,10 @@ begin
         i := i + 1;
         j := j + 1;
       end;
+    	if(pecaInimiga(l1,c1,l2,c2)) then
+	    begin
+	    	moverBispo := true;
+	    end;
     end;
     
     //se o bispo da casa B for para trás e direita
@@ -401,6 +459,10 @@ begin
         i := i - 1;
         j := j - 1;
       end;
+    	if(pecaInimiga(l1,c1,l2,c2)) then
+	    begin
+	    	moverBispo := true;
+	    end;
     end;
     
     
@@ -425,6 +487,10 @@ begin
         i := i - 1;
         j := j + 1;
       end;
+    	if(pecaInimiga(l1,c1,l2,c2)) then
+	    begin
+	    	moverBispo := true;
+	    end;
     end;
   end;
   
@@ -453,6 +519,10 @@ begin
         i := i + 1;
         j := j - 1;
       end;
+      if(pecaInimiga(l1,c1,l2,c2)) then
+	    begin
+	    	moverBispo := true;
+	    end;
     end;
     //se o bispo da casa P for para frente e esquerda
     if ((l2 > l1) and (c2 > c1)) then
@@ -475,6 +545,10 @@ begin
         i := i + 1;
         j := j + 1;
       end;
+      if(pecaInimiga(l1,c1,l2,c2)) then
+	    begin
+	    	moverBispo := true;
+	    end;
     end;
     
     //se o bispo da casa P for para trás e esquerda
@@ -498,6 +572,10 @@ begin
         i := i - 1;
         j := j + 1;
       end;
+      if(pecaInimiga(l1,c1,l2,c2)) then
+	    begin
+	    	moverBispo := true;
+	    end;
     end;
     
     
@@ -522,6 +600,10 @@ begin
         i := i - 1;
         j := j - 1;
       end;
+      if(pecaInimiga(l1,c1,l2,c2)) then
+	    begin
+	    	moverBispo := true;
+	    end;
     end;
   end;
 end;
@@ -722,11 +804,11 @@ begin
 		  readln(l2,c2);
 		  if ((l1 >= 1) and (l1 <= 8) and (c1 >= 1) and (c1 <= 8) and (l2 >= 1) and (l2 <= 8) and (c2 >=1) and (c2 <= 8)) then
 		  begin
-			  	if (jogar(l1,c1, cont)) then
+			  	
+					if (jogar(l1,c1, cont)) then
 			  		 if(moverPeca(l1,c1,l2,c2))then
-				  		cont := cont + 1;
-				
-				
+				  			cont := cont + 1;
+									
 		  end
 		  else
 		  begin 
