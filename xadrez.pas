@@ -67,12 +67,7 @@ begin
   writeln('|                        Tabuleiro                    |');
   writeln('=======================================================');
   
-  for i:= 1 to 8 do
-  begin
-    for j:= 1 to 8 do
-    write('   ',TabuleiroCores[i,j]);
-    writeln(' ');
-  end;
+  
   
   for i:= 1 to 8 do
   begin
